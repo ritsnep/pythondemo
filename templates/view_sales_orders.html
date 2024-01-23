@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Sales Orders</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input,
+        select {
+            margin-bottom: 10px;
+        }
+
+        .product-container {
+            margin-bottom: 10px;
+        }
+
+        .existing-orders {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+
+
+<body class="container mt-4">
+
+    <h1 class="mb-4">Sales Orders List</h1>
+    <div class="existing-orders mt-4">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th scope="col">OrderID</th>
+                <th scope="col">Client</th>
+                <th scope="col">Product</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Rate</th>
+                <th scope="col">Amount</th>
+                <th scope="col">LogDateTime</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sales_order in sales_orders_data %}
+            <tr>
+                <td>{{ sales_order.id }}</td>
+                <td>{{ sales_order.client.name }}</td>
+                <td>{{ sales_order.product.productname }}</td>
+                <td>{{ sales_order.quantity }}</td>
+                <td>{{ sales_order.rate }}</td>
+                <td>{{ sales_order.amount }}</td>
+                <td>{{ sales_order.created_at }}</td>
+                <td><li>
+                    <!-- ... existing content ... -->
+                    <a href="{{ url_for('edit_sales_order', sales_order_id=sales_order.id) }}">Edit</a>
+                </li></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    <div class="container mt-4">
+        <h1>Sales Orders</h1>
+    
+        <form action="/add_sales_order" method="post">
+    
+            <div class="form-row">
+                <div class="col">
+                    <label for="client_id">Client:</label>
+                    <select id="client_id" name="client_id" class="form-control" required>
+                        <option value="" disabled selected>Select a client</option>
+                        {% for client in clients_data %}
+                        <option value="{{ client.id }}">{{ client.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row  product-container">
+                  <!-- <div class="form-row product-container"> -->
+                <div class="col">
+                    <label for="products">Products:</label>
+                    <select id="products" name="products[]" multiple required>
+                        {% for product in products_data %}
+                            <option value="{{ product.id }}">{{ product.productname }}</option>
+                        {% endfor %}
+                    </select>
+                    
+                </div>
+    
+                <div class="col">
+                    <label for="quantities">Quantities:</label>
+                    <input type="text" id="quantities" name="quantities[]" class="form-control"placeholder="Quantity" required>
+                </div>
+    
+                <div class="col">
+                    <label for="rates">Rates:</label>
+                    <input type="text" id="rates" name="rates[]" class="form-control" placeholder="Rate" required>
+                </div>
+    
+                <div class="col">
+                    <label for="amounts">Amounts:</label>
+                    <input type="text" id="amounts" name="amounts[]" class="form-control" placeholder="Amount" required>
+                </div>
+            </div>
+    
+            <!-- Button to add more products dynamically -->
+            <button type="button" onclick="addProduct()" class="btn btn-secondary mb-2">Add Product</button>
+    
+            <button type="submit" class="btn btn-primary mb-2">Add Sales Order</button>
+        </form>
+    </div>
+    
+    <script>
+        let productCount = 1;
+    
+        function addProduct() {
+            productCount++;
+    
+            const container = document.querySelector('.product-container');
+    
+            const newProductDiv = document.createElement('div');
+            newProductDiv.className = 'form-row';
+    
+            newProductDiv.innerHTML = `
+                <div class="col">
+                    <label for="product${productCount}">Product:</label>
+                    <select id="product${productCount}" name="products[]" multiple class="form-control" required></select>
+                </div>
+    
+                <div class="col">
+                    <label for="quantity${productCount}">Quantity:</label>
+                    <input type="text" id="quantity${productCount}" name="quantities[]" class="form-control" required>
+                </div>
+    
+                <div class="col">
+                    <label for="rate${productCount}">Rate:</label>
+                    <input type="text" id="rate${productCount}" name="rates[]" class="form-control" required>
+                </div>
+    
+                <div class="col">
+                    <label for="amount${productCount}">Amount:</label>
+                    <input type="text" id="amount${productCount}" name="amounts[]" class="form-control" required>
+                </div>
+            `;
+    
+            container.appendChild(newProductDiv);
+    
+            // Fetch products and populate the dropdown
+            const productSelect = document.getElementById(`product${productCount}`);
+            fetch('/get_products')
+                .then(response => response.json())
+                .then(data => {
+                    data.products.forEach(product => {
+                        const option = document.createElement('option');
+                        option.value = product.id;
+                        option.text = product.productname;
+                        productSelect.add(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching products:', error));
+        }
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+ 
+
+</body>
+
+</html>

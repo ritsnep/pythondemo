@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Edit Sales Order</title>
+</head>
+<body>
+
+    <h1>Edit Sales Order</h1>
+
+    <form action="/edit_sales_order/{{ sales_order.id }}" method="post">
+        <label for="client_id">Client:</label>
+        <select id="client_id" name="client_id" required>
+            <option value="" disabled>Select a client</option>
+            {% for client in clients_data %}
+                <option value="{{ client.id }}" {% if client.id == sales_order.client_id %}selected{% endif %}>{{ client.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="product_id">Product:</label>
+        <select id="product_id" name="product_id" required>
+            <option value="" disabled>Select a product</option>
+            {% for product in products_data %}
+                <option value="{{ product.id }}" {% if product.id == sales_order.product_id %}selected{% endif %}>{{ product.productname }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="quantity">Quantity:</label>
+        <input type="text" id="quantity" name="quantity" value="{{ sales_order.quantity }}" required>
+
+        <label for="rate">Rate:</label>
+        <input type="text" id="rate" name="rate" value="{{ sales_order.rate }}" required>
+
+        <label for="amount">Amount:</label>
+        <input type="text" id="amount" name="amount" value="{{ sales_order.amount }}" required>
+
+        <button type="submit">Update Sales Order</button>
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Study Material</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <h1>Python Study Material</h1>
+  </header>
+
+  <div id="moduleSelection">
+    {% for module in modules_data %}
+      <div class="module">{{ module.title }}</div>
+    {% endfor %}
+  </div>
+
+  <div id="content">
+    {% for module in modules_data %}
+      <div class="module-content" id="module{{ module.id }}">
+        <h2>{{ module.title }}</h2>
+        <p>{{ module.description }}</p>
+        <!-- Include relevant study material for the module here -->
+      </div>
+    {% endfor %}
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

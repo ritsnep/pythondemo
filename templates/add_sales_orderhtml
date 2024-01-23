@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Sales Order</title>
+</head>
+<body>
+    <h1>Add Sales Order</h1>
+
+    <form action="{{ url_for('add_sales_order') }}" method="post">
+        <label for="client_id">Client:</label>
+        <select id="client_id" name="client_id" required>
+            {% for client in clients_data %}
+                <option value="{{ client.id }}">{{ client.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <label for="products">Products:</label>
+        {% for product in products_data %}
+            <input type="checkbox" id="product_{{ product.id }}" name="products[]" value="{{ product.id }}">
+            <label for="product_{{ product.id }}">{{ product.productname }}</label>
+            <!-- Add input fields for quantity, rate, and amount -->
+            <input type="number" name="quantities[]" placeholder="Quantity" required>
+            <input type="number" name="rates[]" placeholder="Rate" required>
+            <input type="number" name="amounts[]" placeholder="Amount" required>
+            <br>
+        {% endfor %}
+        <br>
+
+        <button type="submit">Add Sales Order</button>
+    </form>
+</body>
+</html>

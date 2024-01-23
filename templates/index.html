@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Awesome Web App</title>
+    <!-- Add your CSS files here -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% if current_user.is_authenticated %}
+    <p>Welcome, {{ current_user.username }}! <a href="{{ url_for('logout') }}">Logout</a></p>
+{% else %}
+    <p><a href="{{ url_for('login') }}">Login</a> or <a href="{{ url_for('register') }}">Register</a></p>
+{% endif %}
+
+        <section>
+            <h1>Welcome to My Awesome Web App</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed arcu nulla. Proin tristique diam ac velit bibendum, eget mollis metus auctor. Cras posuere urna ac libero congue, nec dapibus libero dictum. Proin efficitur erat vitae elit ultricies, ac ultricies mi congue. In in purus ut justo venenatis sollicitudin et id turpis. Integer dignissim erat sed enim faucibus, non pulvinar urna commodo.</p>
+        </section>
+        <p> 1 <a href="/viewclients"> Click here</a>to view and add some clients</p>
+        <p> 2 <a href="/viewproducts"> Click here</a>to view and add some Produucts</p>
+        <p> 3 <a href="/view_sales_orders"> Click here</a>to view and add some Orders</p>
+        <p> 4 <a href="/scrape">Click here to access the web scraping tool</a></p>
+    </main>
+
+    <footer>
+        <p>&copy; 2022 My Awesome Web App. All rights reserved.</p>
+    </footer>
+
+    <!-- Add your JavaScript files here -->
+    <script src="scripts.js"></script>
+</body>
+</html>
